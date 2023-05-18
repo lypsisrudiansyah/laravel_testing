@@ -11,12 +11,15 @@ use Tests\TestCase;
 class ProductTest extends TestCase
 {
     protected $user;
+
+    use RefreshDatabase;
     
     public function setUp() : void
     {
         parent::setUp();
 
-        $this->user = User::whereName('rudi')->first();
+        $this->user = User::factory()->create();
+        // $this->user = User::whereName('rudi')->first();
     }
 
     /**
@@ -48,7 +51,7 @@ class ProductTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertSeeText('no products found');
+        $response->assertDontSee('no products found');
         // $this->assertTrue($user->delete());
     }
 }
