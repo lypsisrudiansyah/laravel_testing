@@ -13,11 +13,13 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
+        "laravel/breeze": "^1.19",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.5.10",
+        "nunomaduro/collision": "^6.4",
+        "pestphp/pest": "^1.22",
+        "pestphp/pest-plugin-laravel": "^1.2",
         "spatie/laravel-ignition": "^1.0"
     },
     "autoload": {
