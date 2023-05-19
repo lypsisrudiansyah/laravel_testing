@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use App\Models\User;
+use Database\Factories\ProductFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -13,8 +14,8 @@ class ProductTest extends TestCase
     protected $user;
 
     use RefreshDatabase;
-    
-    public function setUp() : void
+
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -27,7 +28,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function test_product_contain_empty_tables()
+    public function test_product_contains_empty_tables()
     {
         // $user = User::factory()->create();
         $user = User::whereName('rudi')->first();
@@ -40,18 +41,34 @@ class ProductTest extends TestCase
         // $this->assertTrue($user->delete());
     }
 
-    public function test_product_contain_non_empty_tables()
+    public function test_product_contains_non_empty_tables()
     {
-        Product::create([
+        $product = Product::create([
             'name' => "Salamander Merch",
-            'price' => 15000,
+            'price' => 150,
         ]);
 
         $response = $this->actingAs($this->user)->get('/products');
 
         $response->assertStatus(200);
+        $response->assertSee('Salamander Merch');
 
-        $response->assertDontSee('no products found');
-        // $this->assertTrue($user->delete());
+        $response->assertViewHas('products', function ($collection) use ($product) {
+            return $collection->contains($product);
+        });
+    }
+
+    public function test_paginated_product_doesnt_contain_11th_record_data()
+    {
+        $products = Product::factory(11)->create();
+        $lastProduct = $products->last();
+        // dd($products);
+        $response = $this->actingAs($this->user)->get('/products');
+
+        $response->assertStatus(200);
+
+        $response->assertViewHas('products', function ($collection) use ($lastProduct) {
+            return $collection->contains($lastProduct);
+        });
     }
 }
