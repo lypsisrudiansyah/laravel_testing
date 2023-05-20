@@ -67,10 +67,18 @@ class ProductTest extends TestCase
         $response = $this->actingAs($this->user)->get('/products');
 
         $response->assertStatus(200);
-
         $this->assertCount($lengthData, $products);
         $response->assertViewHas('products', function ($collection) use ($lastProduct) {
             return $collection->contains($lastProduct);
         });
+    }
+
+    public function test_admin_can_see_product_react_button()
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $response = $this->actingAs($admin)->get('/products');
+
+        $response->assertStatus(200);
+        $response->assertSee('Add new product');
     }
 }
