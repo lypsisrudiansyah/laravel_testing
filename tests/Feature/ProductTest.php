@@ -73,12 +73,36 @@ class ProductTest extends TestCase
         });
     }
 
-    public function test_admin_can_see_product_react_button()
+    public function test_non_admin_cannot_see_product_create_button()
+    {
+        $response = $this->actingAs($this->user)->get('/products');
+
+        $response->assertStatus(200);
+        $response->assertDontSee('Add new product');
+    }
+
+    public function test_admin_can_see_product_create_button()
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $response = $this->actingAs($admin)->get('/products');
 
         $response->assertStatus(200);
         $response->assertSee('Add new product');
+    }
+
+    public function test_non_admin_cannot_access_product_create_page()
+    {
+        $response = $this->actingAs($this->user)->get('/products/create');
+
+        $response->assertStatus(403);
+    }
+
+    public function test_admin_can_access_product_create_page()
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        $response = $this->actingAs($admin)->get('/products/create');
+
+        $response->assertStatus(200);
     }
 }
