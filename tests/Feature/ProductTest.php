@@ -60,13 +60,15 @@ class ProductTest extends TestCase
 
     public function test_paginated_product_doesnt_contain_11th_record_data()
     {
-        $products = Product::factory(11)->create();
+        $lengthData = 11;
+        $products = Product::factory($lengthData)->create();
         $lastProduct = $products->last();
         // dd($products);
         $response = $this->actingAs($this->user)->get('/products');
 
         $response->assertStatus(200);
 
+        $this->assertCount($lengthData, $products);
         $response->assertViewHas('products', function ($collection) use ($lastProduct) {
             return $collection->contains($lastProduct);
         });
