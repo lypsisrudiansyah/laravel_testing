@@ -9,6 +9,8 @@ use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
+    use RefreshDatabase;
+    
     /**
      * A basic feature test example.
      *
@@ -32,12 +34,13 @@ class AuthTest extends TestCase
     
     public function test_login_redirect_to_products()
     {
-        $this->post('login', [
+        $response = $this->post('/login', [
             'email' => $this->user->email,
             'password' => $this->password,
         ]);
 
-
+        $response->assertStatus(302);
+        $response->assertRedirect('products');
     }
 
     public function test_user_unauthenticated_cannot_access_product()
@@ -47,6 +50,12 @@ class AuthTest extends TestCase
         // This is the expected behavior of Laravel validation if the validation does not pass
         $response->assertStatus(302);
         $response->assertRedirect('login');
+    }
 
+    public function test_user_authenticated_can_access_product()
+    {
+        $response = $this->actingAs($this->user)->get('/products');
+        
+        $response->assertStatus(200);
     }
 }
