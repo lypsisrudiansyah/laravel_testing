@@ -32,9 +32,6 @@ class ProductTest extends TestCase
      */
     public function test_product_contains_empty_tables()
     {
-        // $user = User::factory()->create();
-        $user = User::whereName('rudi')->first();
-
         $response = $this->actingAs($this->user)->get('/products');
 
         $response->assertStatus(200);
