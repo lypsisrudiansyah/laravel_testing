@@ -11,7 +11,8 @@ use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
-    protected $user;
+    protected User $user;
+    protected User $admin;
 
     use RefreshDatabase;
 
@@ -19,7 +20,8 @@ class ProductTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->user = $this->createUser();
+        $this->admin = $this->createUser(isAdmin: true);
         // $this->user = User::whereName('rudi')->first();
     }
 
@@ -83,8 +85,7 @@ class ProductTest extends TestCase
 
     public function test_admin_can_see_product_create_button()
     {
-        $admin = User::factory()->create(['is_admin' => true]);
-        $response = $this->actingAs($admin)->get('/products');
+        $response = $this->actingAs($this->admin)->get('/products');
 
         $response->assertStatus(200);
         $response->assertSee('Add new product');
@@ -99,10 +100,14 @@ class ProductTest extends TestCase
 
     public function test_admin_can_access_product_create_page()
     {
-        $admin = User::factory()->create(['is_admin' => true]);
 
-        $response = $this->actingAs($admin)->get('/products/create');
+        $response = $this->actingAs($this->admin)->get('/products/create');
 
         $response->assertStatus(200);
+    }
+
+    private function createUser(bool $isAdmin = false): User
+    {
+        return User::factory()->create(['is_admin' => $isAdmin]);
     }
 }
