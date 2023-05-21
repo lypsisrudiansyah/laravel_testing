@@ -103,6 +103,14 @@ class ProductTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_create_product_successful()
+    {
+
+        $response = $this->actingAs($this->admin)->post('/products');
+
+        $response->assertStatus(200);
+    }
+
     private function createUser(bool $isAdmin = false): User
     {
         return User::factory()->create(['is_admin' => $isAdmin]);
