@@ -36,6 +36,8 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    // create implementation code snippet of unit testing of this function
     public function store(ProductRequest $request)
     {
         Product::create($request->validated());
@@ -72,9 +74,11 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductRequest $request, Product $product)
     {
-        
+        $product->update($request->validated());
+
+        return redirect()->route('products.index');
     }
 
     /**

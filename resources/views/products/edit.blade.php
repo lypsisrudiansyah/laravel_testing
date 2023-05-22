@@ -10,8 +10,9 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="min-w-full align-middle">
-                        <form action="{{route('products.update', $product)}}" method="PUT" enctype="multipart/form-data">
+                        <form action="{{route('products.update', $product)}}" method="POST" enctype="multipart/form-data">
                             @csrf
+                            @method('PUT')
 
                             <!-- Name -->
                             <div>

@@ -114,7 +114,8 @@ class ProductTest extends TestCase
 
         // dd($response->status());
 
-        $response->assertStatus(302);
+        // $response->assertStatus(302);
+        $response->assertFound();
         $response->assertRedirect('/products');
 
         $this->assertDatabaseHas('products', $product);
@@ -122,6 +123,15 @@ class ProductTest extends TestCase
         $lastProduct = Product::latest()->first();
         $this->assertEquals($lastProduct->name, $product['name']);
         $this->assertEquals($lastProduct->price, $product['price']);
+    }
+
+    public function test_edit_contains_correct_values()
+    {
+        $product = Product::factory()->create();
+        $response = $this->actingAs($this->admin)->get("/products/{$product->id}/edit");
+
+        $response->assertOk();
+        $response->assertSee('value="' . $product->name . '"', false);
     }
 
     private function createUser(bool $isAdmin = false): User
