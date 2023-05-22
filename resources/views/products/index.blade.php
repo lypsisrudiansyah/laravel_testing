@@ -16,25 +16,26 @@
                                 Add new product</a>
                         @endif
 
-                        <table class="table-auto w-full">
+                        <table class="min-w-full divide-y divide-gray-200 border">
                             <thead>
                                 <tr>
-                                    <th class="px-4 py-2">Name</th>
-                                    <th class="px-4 py-2">Price (USD)</th>
-                                    <th class="px-4 py-2">Price (EUR)</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left">Name</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left">Price (USD)</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left">Price (EUR)</th>
 
                                     @if (auth()->user()->is_admin)
                                         <th class="px-6 py-3 bg-gray-50 text-left">
+                                            Action
                                         </th>
                                     @endif
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="bg-white divide-y divide-gray-200 divide-solid">
                                 @forelse ($products as $product)
-                                    <tr>
-                                        <td class="border px-4 py-2">{{ $product->name }}</td>
-                                        <td class="border px-4 py-2">{{ $product->price }}</td>
-                                        <td class="border px-4 py-2">{{ $product->price_eur }}</td>
+                                    <tr class="bg-white">
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ $product->name }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ $product->price }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ $product->price_eur }}</td>
                                         @if (auth()->user()->is_admin)
                                             <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                                 <a href="{{ route('products.edit', $product) }}"
@@ -45,7 +46,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td class="border px-4 py-2">{{ __('no products found') }}</td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ __('no products found') }}</td>
                                     </tr>
                                 @endforelse
                                 <!-- Add more rows as needed -->
