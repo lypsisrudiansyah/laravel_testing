@@ -11,10 +11,10 @@ use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
+    use RefreshDatabase;
     protected User $user;
     protected User $admin;
 
-    use RefreshDatabase;
 
     public function setUp(): void
     {
