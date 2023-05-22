@@ -106,9 +106,15 @@ class ProductTest extends TestCase
     public function test_create_product_successful()
     {
 
-        $response = $this->actingAs($this->admin)->post('/products');
+        $response = $this->actingAs($this->admin)->post('/products', [
+            'name' => 'Hoodie No 1',
+            'price' => 121,
+        ]);
 
-        $response->assertStatus(200);
+        // dd($response->status());
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/products');
     }
 
     private function createUser(bool $isAdmin = false): User
