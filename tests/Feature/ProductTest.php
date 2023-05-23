@@ -132,7 +132,42 @@ class ProductTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('value="' . $product->name . '"', false);
+        $response->assertSee('value="' . $product->price . '"', false);
     }
+
+    public function test_update_product_failed_and_redirect_back_to_edit_form()
+    {
+
+        $product = Product::factory()->create();
+        $response = $this->actingAs($this->admin)->put("/products/{$product->id}", [
+            'name' => '',
+            'price' => '',
+        ]);
+
+        $response->assertFound();
+        // $response->assertSessionHasErrors(['name', 'price']);
+        $response->assertInvalid(['name', 'price']);
+    }
+
+    public function test_update_product_successful_and_redirect_to_product_index()
+    {
+        $productDataForUpdate = [
+            'name' => 'Nangka',
+            'price' => 120,
+        ];
+
+        $product = Product::factory()->create();
+        $response = $this->actingAs($this->admin)->put("/products/{$product->id}", $productDataForUpdate);
+
+        $response->assertFound();
+        $response->assertRedirectToRoute('products.index');
+
+        $lastProduct = Product::latest()->first();
+        $this->assertEquals($lastProduct->name, $productDataForUpdate['name']);
+        $this->assertEquals($lastProduct->price, $productDataForUpdate['price']);
+    }
+
+    
 
     private function createUser(bool $isAdmin = false): User
     {
