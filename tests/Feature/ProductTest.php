@@ -167,7 +167,29 @@ class ProductTest extends TestCase
         $this->assertEquals($lastProduct->price, $productDataForUpdate['price']);
     }
 
-    
+    public function test_delete_product_successful()
+    {
+
+        $product = Product::factory()->create();
+        // * With many kind assertion
+        $this->assertDatabaseCount('products', 1);
+        // $productCount = Product::count();
+        // $this->assertEquals(1, $productCount);
+        // $this->assertGreaterThanOrEqual(0, $productCount);
+        
+        $response = $this->actingAs($this->admin)->delete("/products/{$product->id}");
+
+        $response->assertFound();
+        $response->assertRedirect('/products');
+
+        // * With many kind assertion
+        $this->assertDatabaseCount('products', 0);
+        $this->assertDatabaseMissing('products', $product->toArray());
+        // $productCount = Product::count();
+        // $this->assertLessThanOrEqual(0, $productCount);
+        // $this->assertEquals(0, $productCount);
+
+    }
 
     private function createUser(bool $isAdmin = false): User
     {
