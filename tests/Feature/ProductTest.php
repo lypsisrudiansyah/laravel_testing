@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\User;
 use Database\Factories\ProductFactory;
@@ -176,7 +177,7 @@ class ProductTest extends TestCase
         // $productCount = Product::count();
         // $this->assertEquals(1, $productCount);
         // $this->assertGreaterThanOrEqual(0, $productCount);
-        
+
         $response = $this->actingAs($this->admin)->delete("/products/{$product->id}");
 
         $response->assertFound();
@@ -188,7 +189,37 @@ class ProductTest extends TestCase
         // $productCount = Product::count();
         // $this->assertLessThanOrEqual(0, $productCount);
         // $this->assertEquals(0, $productCount);
+    }
 
+    // i always get error when test this, whats the correct way to test this function test below?
+    public function test_api_product_list_successful()
+    {
+        $products = Product::factory()->count(2)->create();
+
+        $expectedData = [];
+
+        foreach ($products as $product) {
+            $expectedData['data'][] = [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+            ];
+        }
+
+        $response = $this->getJson('api/products');
+        $response->assertStatus(200);
+        // * Kind 1
+        $response->assertJson($expectedData);
+        // * Kind 2
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => [ // change here
+                    'id',
+                    'name',
+                    'price',
+                ] // change here
+            ]
+        ]);
     }
 
     private function createUser(bool $isAdmin = false): User
