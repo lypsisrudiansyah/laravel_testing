@@ -251,6 +251,27 @@ class ProductTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('name');
     }
+    
+    public function test_api_show_product()
+    {
+
+        $product = Product::factory()->create();
+
+        $response = $this->getJson('api/products/'. $product->id);
+
+        $response->assertOk();
+        // * Kind 1
+        $response->assertJsonMissingPath('data.created_at');
+        $response->assertJsonPath('data.name', $product->name);
+        // * Kind 2
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'price',
+            ]
+        ]);
+    }
 
     private function createUser(bool $isAdmin = false): User
     {
