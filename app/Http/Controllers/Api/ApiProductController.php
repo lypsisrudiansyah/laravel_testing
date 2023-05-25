@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -20,9 +21,9 @@ class ApiProductController extends Controller
         return ProductResource::collection(Product::all());
     }
 
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        
+        return Product::create($request->validated());
     }
 
     public function show($id)

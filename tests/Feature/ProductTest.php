@@ -222,6 +222,23 @@ class ProductTest extends TestCase
         ]);
     }
 
+    public function test_api_create_product_successful()
+    {
+
+        $product = [
+            'name' => 'Hoodie No 1',
+            'price' => 121,
+        ];
+        $response = $this->postJson('api/products', $product);
+
+        // dd($response->status());
+
+        $response->assertCreated();
+        $response->assertJson($product);
+
+        $this->assertDatabaseHas('products', $product);
+    }
+
     private function createUser(bool $isAdmin = false): User
     {
         return User::factory()->create(['is_admin' => $isAdmin]);
