@@ -222,7 +222,7 @@ class ProductTest extends TestCase
         ]);
     }
 
-    public function test_api_create_product_successful()
+    public function test_api_store_product_successful()
     {
 
         $product = [
@@ -237,6 +237,19 @@ class ProductTest extends TestCase
         $response->assertJson($product);
 
         $this->assertDatabaseHas('products', $product);
+    }
+
+    public function test_api_store_product_invalid()
+    {
+
+        $product = [
+            'name' => '',
+            'price' => 121,
+        ];
+        $response = $this->postJson('api/products', $product);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('name');
     }
 
     private function createUser(bool $isAdmin = false): User
